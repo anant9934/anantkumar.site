@@ -1,0 +1,9 @@
+# Netlify _redirects file
+# www → apex (SEO canonical)
+https://www.anantkumar.site/*   https://anantkumar.site/:splat   301!
+
+# Clean URLs (optional future use)
+/study-lpu    /study-lpu.html   200
+/mangalkit    /mangalkit.html   200
+/founders     /founders-verbinden.html   200
+/geojeevan    /geojeevan-ai.html   200

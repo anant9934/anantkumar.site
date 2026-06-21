@@ -1,4 +1,13 @@
 User-agent: *
 Allow: /
 
+# Disallow system/build files
+Disallow: /netlify.toml
+Disallow: /_redirects
+Disallow: /implementation_plan.md
+
+# Crawl delay (optional — be kind to crawlers)
+Crawl-delay: 1
+
+# Sitemap
 Sitemap: https://anantkumar.site/sitemap.xml
