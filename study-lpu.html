@@ -9,7 +9,7 @@
   <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
   <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
   <title>Study LPU — Exam Prep Platform for LPU Students | Anant Kumar</title>
-  <meta name="description" content="Study LPU is an exam practice platform built by Anant Kumar for Lovely Professional University students. 300+ active students, 1,835+ questions solved, AI-powered mock tests, and 9+ expert mentors." />
+  <meta name="description" content="Study LPU is an exam practice platform built by Anant Kumar for Lovely Professional University students. 3,000+ students, 10,587+ questions solved, AI-powered mock tests, and 9+ expert mentors." />
   <meta name="author" content="Anant Kumar" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
   <link rel="canonical" href="https://anantkumar.site/study-lpu.html" />
@@ -18,14 +18,14 @@
   <meta property="og:site_name" content="Anant Kumar" />
   <meta property="og:locale" content="en_IN" />
   <meta property="og:title" content="Study LPU — Exam Practice Platform for LPU Students | Anant Kumar" />
-  <meta property="og:description" content="300+ active students, 1,835+ questions solved. Unit-wise quizzes, AI mock tests, leaderboards and mentorship for LPU students. Built by Anant Kumar from Bihar." />
+  <meta property="og:description" content="3,000+ students, 10,587+ questions solved. Unit-wise quizzes, AI mock tests, leaderboards and mentorship for LPU students. Built by Anant Kumar from Bihar." />
   <meta property="og:url" content="https://anantkumar.site/study-lpu.html" />
   <meta property="og:image" content="https://anantkumar.site/images/anant-kumar.jpg" />
   <meta property="og:image:alt" content="Study LPU — Exam prep platform for LPU students by Anant Kumar" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:creator" content="@quantumanant01" />
   <meta name="twitter:title" content="Study LPU — Exam Prep Platform for LPU Students" />
-  <meta name="twitter:description" content="300+ active students, 1,835+ questions solved. Built by Anant Kumar for LPU." />
+  <meta name="twitter:description" content="3,000+ students, 10,587+ questions solved. Built by Anant Kumar for LPU." />
   <meta name="twitter:image" content="https://anantkumar.site/images/anant-kumar.jpg" />
 
   <script type="application/ld+json">
@@ -58,6 +58,479 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    /* ── Study LPU Page — Premium Styles ── */
+
+    /* Hero */
+    .slpu-hero {
+      padding-top: 120px;
+      padding-bottom: 0;
+      background: linear-gradient(160deg, #FAFAF7 0%, #EEF9F0 60%, #FAFAF7 100%);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+    .slpu-hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -120px;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .slpu-hero__inner {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 64px;
+      align-items: start;
+      padding-bottom: 0;
+    }
+    .slpu-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.25);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #16a34a;
+      margin-bottom: 28px;
+    }
+    .slpu-hero__badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .slpu-hero__title {
+      font-family: var(--font-head);
+      font-size: clamp(40px, 5.5vw, 76px);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+    }
+    .slpu-hero__title span {
+      color: #16a34a;
+    }
+    .slpu-hero__desc {
+      font-size: clamp(16px, 1.4vw, 19px);
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .slpu-hero__actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+    .btn--green {
+      background: #16a34a;
+      color: #fff;
+    }
+    .btn--green:hover {
+      background: #15803d;
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(22,163,74,0.28);
+    }
+    .slpu-hero__meta {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+    .slpu-hero__meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 20px 28px;
+      border-right: 1px solid var(--border);
+    }
+    .slpu-hero__meta-item:first-child { padding-left: 0; }
+    .slpu-hero__meta-item:last-child { border-right: none; }
+    .slpu-hero__meta-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+    }
+    .slpu-hero__meta-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* Hero sidebar card */
+    .slpu-hero__card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 8px 40px rgba(17,17,17,0.06), 0 2px 8px rgba(17,17,17,0.04);
+      position: sticky;
+      top: 88px;
+      margin-top: 24px;
+    }
+    .slpu-hero__card-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .slpu-card-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .slpu-card-stat:last-of-type { border-bottom: none; }
+    .slpu-card-stat__label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slpu-card-stat__icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      background: #f0fdf4;
+    }
+    .slpu-card-stat__num {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .slpu-hero__card-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: #16a34a;
+      color: #fff;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 24px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .slpu-hero__card-cta:hover {
+      background: #15803d;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(22,163,74,0.25);
+    }
+
+    /* Stats band */
+    .slpu-stats {
+      background: var(--bg-dark);
+      padding: 64px 0;
+    }
+    .slpu-stats__grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+    }
+    .slpu-stat {
+      padding: 0 32px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+    .slpu-stat:first-child { padding-left: 0; text-align: left; }
+    .slpu-stat:last-child { border-right: none; padding-right: 0; text-align: right; }
+    .slpu-stat__num {
+      font-family: var(--font-head);
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .slpu-stat__num span { color: #4ade80; }
+    .slpu-stat__label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 400;
+    }
+
+    /* Features section */
+    .slpu-features {
+      padding: var(--section-pad) 0;
+      background: var(--bg);
+    }
+    .slpu-features__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #16a34a;
+      margin-bottom: 16px;
+    }
+    .slpu-features__title {
+      font-family: var(--font-head);
+      font-size: clamp(30px, 3.5vw, 52px);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      max-width: 560px;
+    }
+    .slpu-features__sub {
+      font-size: clamp(15px, 1.2vw, 17px);
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 64px;
+    }
+    .slpu-features__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .slpu-feature {
+      background: var(--bg);
+      padding: 40px 36px;
+      transition: background 0.2s;
+    }
+    .slpu-feature:hover { background: #f9fefb; }
+    .slpu-feature__icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .slpu-feature__title {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .slpu-feature__desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    /* Case study — redesigned */
+    .slpu-case {
+      padding: var(--section-pad) 0;
+      background: var(--bg-alt);
+    }
+    .slpu-case__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+    .slpu-case__title {
+      font-family: var(--font-head);
+      font-size: clamp(30px, 3.5vw, 52px);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: 64px;
+      max-width: 560px;
+    }
+    .slpu-case__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .slpu-case-block {
+      background: var(--bg);
+      padding: 48px 44px;
+    }
+    .slpu-case-block--full {
+      grid-column: 1 / -1;
+      background: var(--bg-dark);
+      color: #fff;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .slpu-case-block__step {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #16a34a;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slpu-case-block__step::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: #16a34a;
+    }
+    .slpu-case-block--full .slpu-case-block__step {
+      color: #4ade80;
+    }
+    .slpu-case-block--full .slpu-case-block__step::before {
+      background: #4ade80;
+    }
+    .slpu-case-block__title {
+      font-family: var(--font-head);
+      font-size: clamp(20px, 2vw, 28px);
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .slpu-case-block--full .slpu-case-block__title {
+      color: #fff;
+    }
+    .slpu-case-block__body {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+    .slpu-case-block--full .slpu-case-block__body {
+      color: rgba(255,255,255,0.65);
+    }
+    .slpu-outcome-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .slpu-outcome-stat {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .slpu-outcome-stat__num {
+      font-family: var(--font-head);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: #4ade80;
+      margin-bottom: 4px;
+    }
+    .slpu-outcome-stat__label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Tech tags */
+    .slpu-tech-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .slpu-tech-tag {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border: 1px solid #bbf7d0;
+      border-radius: 100px;
+      color: #16a34a;
+      background: #f0fdf4;
+    }
+
+    /* CTA section */
+    .slpu-cta {
+      padding: var(--section-pad) 0;
+      background: #16a34a;
+      text-align: center;
+    }
+    .slpu-cta__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 20px;
+    }
+    .slpu-cta__title {
+      font-family: var(--font-head);
+      font-size: clamp(32px, 4vw, 60px);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.0;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .slpu-cta__sub {
+      font-size: clamp(15px, 1.3vw, 18px);
+      color: rgba(255,255,255,0.75);
+      max-width: 440px;
+      margin: 0 auto 40px;
+      line-height: 1.65;
+    }
+    .btn--white {
+      background: #fff;
+      color: #16a34a;
+      font-weight: 600;
+    }
+    .btn--white:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+    }
+    .btn--white-outline {
+      border: 1.5px solid rgba(255,255,255,0.4);
+      color: #fff;
+      background: transparent;
+    }
+    .btn--white-outline:hover {
+      border-color: #fff;
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-4px);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .slpu-hero__inner { grid-template-columns: 1fr; gap: 40px; }
+      .slpu-hero__card { position: static; margin-top: 0; }
+      .slpu-stats__grid { grid-template-columns: repeat(3, 1fr); gap: 32px 0; }
+      .slpu-stat { border-right: none; text-align: left; padding: 0; }
+      .slpu-features__grid { grid-template-columns: 1fr; }
+      .slpu-case__grid { grid-template-columns: 1fr; }
+      .slpu-case-block--full { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 600px) {
+      .slpu-features__grid { grid-template-columns: 1fr; }
+      .slpu-stats__grid { grid-template-columns: repeat(2, 1fr); }
+      .slpu-hero__meta { flex-wrap: wrap; }
+      .slpu-hero__meta-item { border-right: none; padding: 16px 0; border-bottom: 1px solid var(--border); width: 50%; }
+    }
+  </style>
 </head>
 <body>
 
@@ -66,6 +539,7 @@
     <ul class="nav__links" role="list">
       <li><a href="index.html#journey" class="nav__link">Journey</a></li>
       <li><a href="index.html#ventures" class="nav__link">Ventures</a></li>
+      <li><a href="index.html#book" class="nav__link">Book</a></li>
       <li><a href="index.html#writing" class="nav__link">Writing</a></li>
       <li><a href="index.html#contact" class="nav__cta">Say hello →</a></li>
     </ul>
@@ -77,140 +551,264 @@
   <div class="nav__mobile-menu" id="mobile-menu">
     <a href="index.html#journey" class="nav__mobile-link">Journey</a>
     <a href="index.html#ventures" class="nav__mobile-link">Ventures</a>
+    <a href="index.html#book" class="nav__mobile-link">Book</a>
     <a href="index.html#writing" class="nav__mobile-link">Writing</a>
     <a href="index.html#contact" class="nav__mobile-link">Say hello →</a>
   </div>
 
   <main>
     <article>
-      <section class="page-hero">
+
+      <!-- ── Hero ── -->
+      <section class="slpu-hero">
         <div class="container">
-          <a href="index.html#ventures" class="page-hero__back">All Ventures</a>
-          <div class="page-hero__label">EdTech · Founded 2024 · Active</div>
-          <h1 class="t-h1 page-hero__title reveal">Study LPU Online</h1>
-          <p class="page-hero__desc reveal reveal-delay-1">
-            A structured exam-practice platform built specifically for Lovely Professional University students — because students deserve more than random PDFs and guesswork before every midterm.
+          <div class="slpu-hero__inner">
+
+            <div class="slpu-hero__left">
+              <a href="index.html#ventures" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); margin-bottom: 32px; transition: color 0.2s;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">← All Ventures</a>
+
+              <div class="slpu-hero__badge reveal">
+                <span class="slpu-hero__badge-dot"></span>
+                EdTech · Founded 2024 · Live
+              </div>
+
+              <h1 class="slpu-hero__title reveal reveal-delay-1">
+                Study<br><span>LPU Online</span>
+              </h1>
+
+              <p class="slpu-hero__desc reveal reveal-delay-2">
+                A structured exam-practice platform built specifically for Lovely Professional University students — because students deserve more than random PDFs and guesswork before every midterm.
+              </p>
+
+              <div class="slpu-hero__actions reveal reveal-delay-3">
+                <a href="https://studylpu.online/" target="_blank" rel="noopener noreferrer" class="btn btn--green btn--arrow" id="study-lpu-cta-hero">Visit Study LPU</a>
+                <a href="#case-study" class="btn btn--outline">Read Case Study</a>
+              </div>
+
+              <div class="slpu-hero__meta reveal reveal-delay-4">
+                <div class="slpu-hero__meta-item">
+                  <span class="slpu-hero__meta-label">Role</span>
+                  <span class="slpu-hero__meta-value">Founder & Builder</span>
+                </div>
+                <div class="slpu-hero__meta-item">
+                  <span class="slpu-hero__meta-label">Year</span>
+                  <span class="slpu-hero__meta-value">2024 – Present</span>
+                </div>
+                <div class="slpu-hero__meta-item">
+                  <span class="slpu-hero__meta-label">Category</span>
+                  <span class="slpu-hero__meta-value">EdTech / SaaS</span>
+                </div>
+                <div class="slpu-hero__meta-item">
+                  <span class="slpu-hero__meta-label">Website</span>
+                  <span class="slpu-hero__meta-value"><a href="https://studylpu.online/" target="_blank" rel="noopener noreferrer" style="color: #16a34a; font-weight: 500;">studylpu.online ↗</a></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sidebar stat card -->
+            <div class="slpu-hero__card reveal reveal-delay-2">
+              <div class="slpu-hero__card-label">Live Platform Stats</div>
+
+              <div class="slpu-card-stat">
+                <div class="slpu-card-stat__label">
+                  <span class="slpu-card-stat__icon">👥</span>
+                  Total Students
+                </div>
+                <div class="slpu-card-stat__num">3,000+</div>
+              </div>
+              <div class="slpu-card-stat">
+                <div class="slpu-card-stat__label">
+                  <span class="slpu-card-stat__icon">⚡</span>
+                  Active Students
+                </div>
+                <div class="slpu-card-stat__num">498+</div>
+              </div>
+              <div class="slpu-card-stat">
+                <div class="slpu-card-stat__label">
+                  <span class="slpu-card-stat__icon">✅</span>
+                  Questions Solved
+                </div>
+                <div class="slpu-card-stat__num">10,587+</div>
+              </div>
+              <div class="slpu-card-stat">
+                <div class="slpu-card-stat__label">
+                  <span class="slpu-card-stat__icon">📚</span>
+                  Study Resources
+                </div>
+                <div class="slpu-card-stat__num">19+</div>
+              </div>
+              <div class="slpu-card-stat">
+                <div class="slpu-card-stat__label">
+                  <span class="slpu-card-stat__icon">🎓</span>
+                  Expert Mentors
+                </div>
+                <div class="slpu-card-stat__num">9+</div>
+              </div>
+
+              <a href="https://studylpu.online/" target="_blank" rel="noopener noreferrer" class="slpu-hero__card-cta" id="study-lpu-cta-card">
+                Start for Free →
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Stats Band ── -->
+      <section class="slpu-stats">
+        <div class="container">
+          <div class="slpu-stats__grid">
+            <div class="slpu-stat reveal">
+              <div class="slpu-stat__num"><span>3,000</span>+</div>
+              <div class="slpu-stat__label">Total Students</div>
+            </div>
+            <div class="slpu-stat reveal reveal-delay-1">
+              <div class="slpu-stat__num"><span>498</span>+</div>
+              <div class="slpu-stat__label">Active Students</div>
+            </div>
+            <div class="slpu-stat reveal reveal-delay-2">
+              <div class="slpu-stat__num"><span>10,587</span>+</div>
+              <div class="slpu-stat__label">Questions Solved</div>
+            </div>
+            <div class="slpu-stat reveal reveal-delay-3">
+              <div class="slpu-stat__num"><span>19</span>+</div>
+              <div class="slpu-stat__label">Study Resources</div>
+            </div>
+            <div class="slpu-stat reveal reveal-delay-4">
+              <div class="slpu-stat__num"><span>9</span>+</div>
+              <div class="slpu-stat__label">Expert Mentors</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Features ── -->
+      <section class="slpu-features">
+        <div class="container">
+          <div class="slpu-features__label reveal">What We Built</div>
+          <h2 class="slpu-features__title reveal reveal-delay-1">Everything you need to<br>ace your LPU exams.</h2>
+          <p class="slpu-features__sub reveal reveal-delay-2">
+            Built around one core insight: the best way to prepare is to practice under conditions that feel like the real exam. Not reading. Not watching. <strong>Doing.</strong>
           </p>
-          <div class="hero__actions reveal reveal-delay-2" style="margin-bottom: 48px;">
-            <a href="https://studylpu.online/" target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--arrow" id="study-lpu-cta">Visit Study LPU</a>
-          </div>
-          <div class="page-hero__meta reveal reveal-delay-3">
-            <div class="page-meta-item">
-              <span class="page-meta-item__label">Role</span>
-              <span class="page-meta-item__value">Founder &amp; Builder</span>
+
+          <div class="slpu-features__grid reveal reveal-delay-2">
+            <div class="slpu-feature">
+              <div class="slpu-feature__icon">📝</div>
+              <div class="slpu-feature__title">Unit-wise Quizzes</div>
+              <p class="slpu-feature__desc">Easy, Medium, and Hard difficulty levels. Practice exactly what's in your upcoming exam — by unit, by subject, by semester.</p>
             </div>
-            <div class="page-meta-item">
-              <span class="page-meta-item__label">Year</span>
-              <span class="page-meta-item__value">2024 – Present</span>
+            <div class="slpu-feature">
+              <div class="slpu-feature__icon">⏱️</div>
+              <div class="slpu-feature__title">Custom Exam Generator</div>
+              <p class="slpu-feature__desc">Choose subject, difficulty, number of questions, and duration. A real timer. A real MCQ interface. Real pressure — before the actual exam.</p>
             </div>
-            <div class="page-meta-item">
-              <span class="page-meta-item__label">Category</span>
-              <span class="page-meta-item__value">EdTech / SaaS</span>
+            <div class="slpu-feature">
+              <div class="slpu-feature__icon">🤖</div>
+              <div class="slpu-feature__title">AI Mock Tests</div>
+              <p class="slpu-feature__desc">AI-powered tests that adapt to your weak areas. Thousands of AI-generated questions trained on LPU exam patterns.</p>
             </div>
-            <div class="page-meta-item">
-              <span class="page-meta-item__label">Website</span>
-              <span class="page-meta-item__value"><a href="https://studylpu.online/" target="_blank" rel="noopener noreferrer" style="border-bottom: 1px solid var(--border); padding-bottom: 1px;">studylpu.online ↗</a></span>
+            <div class="slpu-feature">
+              <div class="slpu-feature__icon">🏆</div>
+              <div class="slpu-feature__title">Live Leaderboards</div>
+              <p class="slpu-feature__desc">Compete with your peers in real time. See where you rank. The gamification that actually makes studying addictive.</p>
+            </div>
+            <div class="slpu-feature">
+              <div class="slpu-feature__icon">📖</div>
+              <div class="slpu-feature__title">10,000+ Resources</div>
+              <p class="slpu-feature__desc">Notes, past papers, and verified resources uploaded and reviewed by toppers and mentors — not random WhatsApp PDFs.</p>
+            </div>
+            <div class="slpu-feature">
+              <div class="slpu-feature__icon">🎓</div>
+              <div class="slpu-feature__title">1:1 Expert Mentorship</div>
+              <p class="slpu-feature__desc">9+ expert mentors available for pay-per-session guidance. Because sometimes you need a human who's already solved your problem.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Metrics -->
-      <section class="section--alt" style="padding: 0;">
+      <!-- ── Case Study ── -->
+      <section class="slpu-case" id="case-study">
         <div class="container">
-          <div class="metrics-row">
-            <div class="metric-box reveal">
-              <div class="metric-box__num">3,000+</div>
-              <div class="metric-box__label">Total Students</div>
+          <div class="slpu-case__label reveal">Case Study</div>
+          <h2 class="slpu-case__title reveal reveal-delay-1">From personal frustration<br>to a platform 3,000+ trust.</h2>
+
+          <div class="slpu-case__grid">
+
+            <!-- Problem -->
+            <div class="slpu-case-block reveal">
+              <div class="slpu-case-block__step">01 · Problem</div>
+              <h3 class="slpu-case-block__title">Students were drowning in unstructured preparation.</h3>
+              <div class="slpu-case-block__body">
+                <p>Before every LPU midterm, the ritual was the same: frantically search WhatsApp groups for PDFs, download 40 MB files that may or may not be for the right subject, find old question papers from three semesters ago, and hope for the best.</p>
+                <p style="margin-top: 16px;">No structured MCQ environment. No exam timer. No way to track improvement. Students weren't failing because they were lazy — <strong>the tools were broken.</strong></p>
+              </div>
             </div>
-            <div class="metric-box reveal reveal-delay-1">
-              <div class="metric-box__num">498+</div>
-              <div class="metric-box__label">Active Students</div>
+
+            <!-- Solution -->
+            <div class="slpu-case-block reveal reveal-delay-1">
+              <div class="slpu-case-block__step">02 · Solution</div>
+              <h3 class="slpu-case-block__title">Simulate the real exam. Beat it before you sit it.</h3>
+              <div class="slpu-case-block__body">
+                <p>Study LPU gives every student unit-wise quizzes, a custom exam generator, a real timer, live leaderboards, verified resources, and AI-powered mocks — all in one place.</p>
+                <p style="margin-top: 16px;">We added a mentorship layer on top: 9+ expert mentors, flexible pay-per-session. Because sometimes the best resource is a person.</p>
+              </div>
+              <div class="slpu-tech-tags" style="margin-top: 24px;">
+                <span class="slpu-tech-tag">AI Mock Tests</span>
+                <span class="slpu-tech-tag">MCQ Engine</span>
+                <span class="slpu-tech-tag">Leaderboards</span>
+                <span class="slpu-tech-tag">Mentorship</span>
+                <span class="slpu-tech-tag">Resource Hub</span>
+                <span class="slpu-tech-tag">Web Platform</span>
+              </div>
             </div>
-            <div class="metric-box reveal reveal-delay-2">
-              <div class="metric-box__num">10,587+</div>
-              <div class="metric-box__label">Questions Solved</div>
+
+            <!-- Outcome — full width dark -->
+            <div class="slpu-case-block slpu-case-block--full reveal">
+              <div>
+                <div class="slpu-case-block__step">04 · Outcome</div>
+                <h3 class="slpu-case-block__title">3,000+ students. Built entirely on word of mouth.</h3>
+                <div class="slpu-case-block__body">
+                  <p>Not through paid acquisition. Not through ads. Through students telling other students — because they actually felt the difference in their results.</p>
+                  <p style="margin-top: 16px;">Subjects currently supported: MTH166, ECE249, CSE111, CHE110, PHY110. Architecture designed to onboard new subjects in hours, not weeks. Next milestone: <strong style="color: #4ade80;">5,000 active students.</strong></p>
+                </div>
+              </div>
+              <div class="slpu-outcome-stats">
+                <div class="slpu-outcome-stat">
+                  <div class="slpu-outcome-stat__num">3,000+</div>
+                  <div class="slpu-outcome-stat__label">Total Students</div>
+                </div>
+                <div class="slpu-outcome-stat">
+                  <div class="slpu-outcome-stat__num">10,587+</div>
+                  <div class="slpu-outcome-stat__label">Questions Solved</div>
+                </div>
+                <div class="slpu-outcome-stat">
+                  <div class="slpu-outcome-stat__num">19+</div>
+                  <div class="slpu-outcome-stat__label">Study Resources</div>
+                </div>
+                <div class="slpu-outcome-stat">
+                  <div class="slpu-outcome-stat__num">9+</div>
+                  <div class="slpu-outcome-stat__label">Expert Mentors</div>
+                </div>
+              </div>
             </div>
-            <div class="metric-box reveal reveal-delay-3">
-              <div class="metric-box__num">19+</div>
-              <div class="metric-box__label">Study Resources</div>
-            </div>
-            <div class="metric-box reveal reveal-delay-4">
-              <div class="metric-box__num">9+</div>
-              <div class="metric-box__label">Expert Mentors</div>
-            </div>
+
           </div>
         </div>
       </section>
 
-      <!-- Case Study -->
-      <section class="section">
+      <!-- ── CTA ── -->
+      <section class="slpu-cta">
         <div class="container">
-
-          <div class="case-section reveal">
-            <div class="case-section__header">
-              <div class="case-section__number">01 · Problem</div>
-              <div>
-                <h2 class="case-section__title">Students were drowning in unstructured preparation.</h2>
-                <div class="case-section__body">
-                  <p>Before every LPU midterm, the ritual was the same: frantically search WhatsApp groups for PDFs, download 40 MB files from Google Drive that may or may not be for the right subject, find old question papers from three semesters ago, and hope for the best.</p>
-                  <p>There was no structured MCQ environment. No exam timer that simulated real pressure. No way to track whether you were actually improving. No reliable way to know what questions mattered most. Students weren't failing because they were lazy — they were failing because the tools they had were broken.</p>
-                  <p>I noticed this during my own midterm season. I had the same frustrations as everyone else. The difference was I had the technical ability to do something about it.</p>
-                </div>
-              </div>
-            </div>
+          <div class="slpu-cta__eyebrow reveal">Free to Use · No Credit Card</div>
+          <h2 class="slpu-cta__title reveal reveal-delay-1">Ready to score higher?</h2>
+          <p class="slpu-cta__sub reveal reveal-delay-2">Join 3,000+ LPU students who stopped guessing and started practicing smart.</p>
+          <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;" class="reveal reveal-delay-3">
+            <a href="https://studylpu.online/" target="_blank" rel="noopener noreferrer" class="btn btn--white btn--arrow" id="study-lpu-cta-bottom">Start for Free</a>
+            <a href="index.html" class="btn btn--white-outline">← Back to Portfolio</a>
           </div>
-
-          <div class="case-section reveal">
-            <div class="case-section__header">
-              <div class="case-section__number">02 · Solution</div>
-              <div>
-                <h2 class="case-section__title">Simulate the real exam. Beat it before you sit it.</h2>
-                <div class="case-section__body">
-                  <p>Study LPU Online is built around one core insight: the best way to prepare for an exam is to practice under conditions that feel like the real exam. Not reading notes. Not watching videos. Doing.</p>
-                  <p>The platform gives every LPU student access to unit-wise quizzes (Easy / Medium / Hard), a custom exam generator where you choose the subject, difficulty, number of questions, and duration, a real exam timer environment with MCQ interface, live leaderboards to compete with peers, verified study resources uploaded and reviewed by toppers and mentors, and AI-powered mock tests that adapt to your weak areas.</p>
-                  <p>We added a mentorship layer — 9+ expert mentors available for 1:1 sessions with a flexible pay-per-session model. The platform also hosts 10,000+ notes, past papers, and AI-generated mocks. Because sometimes what a student needs isn't another resource. It's another human who has already solved the problem they're stuck on.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="case-section reveal">
-            <div class="case-section__header">
-              <div class="case-section__number">03 · Technology</div>
-              <div>
-                <h2 class="case-section__title">Built fast. Iterated faster.</h2>
-                <div class="case-section__body">
-                  <p>The platform was built with a strong emphasis on speed and simplicity — because the primary users are students under exam pressure. Every millisecond of friction is a reason to close the tab.</p>
-                  <p>Subjects currently supported: MTH166, ECE249, CSE111, CHE110, PHY110. The architecture is designed to onboard new subjects in hours, not weeks.</p>
-                </div>
-                <div class="tech-tags">
-                  <span class="tech-tag">Web Platform</span>
-                  <span class="tech-tag">AI Mock Tests</span>
-                  <span class="tech-tag">Real-time Leaderboards</span>
-                  <span class="tech-tag">MCQ Engine</span>
-                  <span class="tech-tag">Mentor Matching</span>
-                  <span class="tech-tag">Resource Management</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="case-section reveal">
-            <div class="case-section__header">
-              <div class="case-section__number">04 · Outcome</div>
-              <div>
-                <h2 class="case-section__title">3,000+ students in. 5,000 is the next milestone.</h2>
-                <div class="case-section__body">
-                  <p>Study LPU crossed 3,000 total students and 498 active students — not through paid acquisition, but through word of mouth, because students actually felt the difference in their results. With 10,587+ questions solved, 19+ study resources, and 9+ expert mentors, the platform has become the go-to exam prep tool for LPU students.</p>
-                  <p>The next target is 5,000+ active students. The platform continues to grow with new subjects, new mentors, and new features. The mission hasn't changed: make exam preparation structured, competitive, and efficient for every LPU student who deserves better tools.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
+
     </article>
   </main>
 
