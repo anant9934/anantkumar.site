@@ -530,7 +530,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   grid-template-columns: repeat(2, 1fr);
   gap: 40px 80px;
 }
-.focus__item {}
+
 .focus__label-row {
   display: flex;
   justify-content: space-between;
@@ -650,6 +650,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--text-secondary);
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -850,6 +851,149 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--bg);
 }
 
+/* ── Book Section ────────────────────────────────────────── */
+.book__layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.book__cover-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.book__cover-3d {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    -8px 12px 40px rgba(0,0,0,0.35),
+    -2px 4px 12px rgba(0,0,0,0.2),
+    4px 0 0 #c8a96e inset;
+  transform: perspective(800px) rotateY(4deg);
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+.book__cover-3d:hover {
+  transform: perspective(800px) rotateY(0deg);
+  box-shadow:
+    -4px 12px 48px rgba(0,0,0,0.4),
+    -1px 4px 16px rgba(0,0,0,0.2);
+}
+.book__cover-img {
+  width: 100%;
+  display: block;
+  border-radius: 6px;
+}
+.book__badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.book__badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: rgba(200, 169, 110, 0.12);
+  color: #c8a96e;
+  border: 1px solid rgba(200, 169, 110, 0.25);
+}
+.book__details { display: flex; flex-direction: column; gap: 20px; }
+.book__eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c8a96e;
+}
+.book__title {
+  font-family: var(--font-head);
+  font-size: clamp(36px, 4vw, 64px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+  color: #fff;
+}
+.book__subtitle {
+  font-size: clamp(14px, 1.2vw, 17px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-top: -12px;
+}
+.book__desc {
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.75;
+  color: rgba(255,255,255,0.65);
+  max-width: 520px;
+  padding-top: 4px;
+}
+.book__authors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
+}
+.book__authors > span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+.book__co-authors {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: rgba(255,255,255,0.45) !important;
+}
+.book__meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.book__meta > span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.book__meta > span::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+}
+.book__meta > span:first-child::before { display: none; }
+.book__cta {
+  background: #c8a96e;
+  color: #0F172A;
+  font-weight: 600;
+  margin-top: 8px;
+  align-self: flex-start;
+}
+.book__cta:hover {
+  background: #d4bb7e;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(200,169,110,0.35);
+}
+.book__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.book__stars { color: #c8a96e; letter-spacing: -2px; font-size: 18px; }
+.book__rating-text { font-size: 13px; color: rgba(255,255,255,0.45); }
+
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 900px) {
   .hero {
@@ -874,6 +1018,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .journey__grid { grid-template-columns: 24px 1fr; gap: 0 24px; }
   .journey__side:first-child { display: none; }
   .journey__side:last-child .journey__dot-wrap { left: -30px; }
+  .book__layout { grid-template-columns: 1fr; gap: 40px; }
+  .book__cover-wrap { align-items: flex-start; }
+  .book__cover-3d { max-width: 260px; }
   .nav__links { display: none; }
   .nav__hamburger { display: flex; }
 }
