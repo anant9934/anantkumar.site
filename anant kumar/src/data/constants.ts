@@ -11,7 +11,7 @@ export const PROFILE = {
   phone: '+917209536120',
   website: 'anantkumar.site',
   blogHost: 'anantkumar.site', // Fallback since no blog
-  formspreeId: 'mjgzokro', // Formspree Form ID
+  formspreeId: 'mnpqprvw', // Formspree Form ID
 } as const;
 
 export const SOCIAL_LINKS = [
