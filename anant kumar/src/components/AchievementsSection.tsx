@@ -1,0 +1,483 @@
+import { useState } from 'react';
+import SectionBlock from './SectionBlock';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { ArrowUpRight, Award } from 'lucide-react';
+
+type Category = 'All' | 'Milestone' | 'Publication' | 'Leadership' | 'Patent' | 'Certification';
+
+const achievements: {
+  title: string;
+  issuer: string;
+  date: string;
+  description: string;
+  image: string;
+  category: Exclude<Category, 'All'>;
+  tag: string;
+  url?: string;
+}[] = [
+  {
+    title: '6L+ Cumulative Revenue',
+    issuer: 'Projects & Ventures',
+    date: '2025 – Present',
+    description: 'Generated over 6L+ cumulative revenue through various projects and ventures.',
+    image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=500&h=500&fit=crop',
+    category: 'Milestone',
+    tag: 'Revenue',
+  },
+  {
+    title: '300+ Active Students Reached',
+    issuer: 'Study LPU Online',
+    date: 'Feb. 2026 – Present',
+    description: 'Reached and engaged over 300+ active students through the Study LPU Online platform.',
+    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=500&h=500&fit=crop',
+    category: 'Milestone',
+    tag: 'Impact',
+  },
+  {
+    title: 'Author of 2 Books',
+    issuer: 'Self-Published',
+    date: 'Recent',
+    description: 'Author of "The AI Student" and co-author of "The Rhythm Code".',
+    image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500&h=500&fit=crop',
+    category: 'Publication',
+    tag: 'Author',
+  },
+  {
+    title: '1 Paper Review',
+    issuer: 'Research & Technical Publications',
+    date: 'Recent',
+    description: 'Conducted technical paper review and contributed to research initiatives.',
+    image: 'https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=500&h=500&fit=crop',
+    category: 'Publication',
+    tag: 'Research',
+  },
+  {
+    title: 'President & CEO',
+    issuer: 'Founders Verbinden & MangalKit',
+    date: '2025 – Present',
+    description: 'Serving as the President of Founders Verbinden and the CEO of MangalKit.',
+    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=500&h=500&fit=crop',
+    category: 'Leadership',
+    tag: 'Executive',
+  },
+  {
+    title: 'DBMS Predictive Execution',
+    issuer: 'Patent Office',
+    date: 'Pending',
+    description: 'Co-inventor/applicant with Shivam Kumar Singh on a database predictive-execution patent initiative.',
+    image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&h=500&fit=crop',
+    category: 'Patent',
+    tag: 'Innovation',
+  },
+  {
+    title: 'OpenXAI Accelerator 2025 - Shortlisted',
+    issuer: 'India Accelerator',
+    date: 'Nov. 2025',
+    description: 'Shortlisted for India Accelerator OpenXAI 2025 program.',
+    image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=500&h=500&fit=crop',
+    category: 'Certification',
+    tag: 'Accelerator',
+  },
+  {
+    title: 'Python (Basic)',
+    issuer: 'HackerRank',
+    date: 'Nov. 2025',
+    description: 'Certified in Python (Basic) from HackerRank.',
+    image: '/certificates/python.pdf',
+    category: 'Certification',
+    tag: 'Coding',
+    url: '/certificates/5897e9ef-9c80-4548-8867-edbb2ef19090.pdf',
+  },
+  {
+    title: 'Hack India 2025 Participant',
+    issuer: 'MachineHack / Hackathon India',
+    date: '2025',
+    description: 'Participated in Hack India 2025 Hackathon.',
+    image: '/certificates/certif.png',
+    category: 'Certification',
+    tag: 'Hackathon',
+  },
+  {
+    title: 'Times Critical Thinking Championship',
+    issuer: 'The Times Of India',
+    date: 'Apr. 2024',
+    description: 'Certificate of Completion for participating in the Times Critical Thinking Championship.',
+    image: '/certificates/times.png',
+    category: 'Certification',
+    tag: 'Critical Thinking',
+  },
+  {
+    title: 'Drone Developer Certification Programme',
+    issuer: 'Reliance Foundation',
+    date: 'Nov. 2025',
+    description: 'Certified Drone Developer by Reliance Foundation.',
+    image: '/certificates/drone.pdf',
+    category: 'Certification',
+    tag: 'Hardware',
+    url: '/certificates/Drone developer .pdf',
+  },
+  {
+    title: 'Leadership and Management Skills',
+    issuer: 'Reliance Foundation',
+    date: 'Oct. 2025',
+    description: 'Certified in Leadership and Management Skills.',
+    image: '/certificates/leader.pdf',
+    category: 'Certification',
+    tag: 'Management',
+    url: '/certificates/leadership.pdf',
+  },
+  {
+    title: 'P03V226: Leadership and Teams',
+    issuer: 'Taylor University',
+    date: 'Oct. 2025',
+    description: 'Successfully completed the Leadership and Teams certification.',
+    image: '/certificates/teams.pdf',
+    category: 'Certification',
+    tag: 'Teamwork',
+    url: '/certificates/leadership and teams.pdf',
+  },
+  {
+    title: 'MA: Time Management',
+    issuer: 'Macmillan Education',
+    date: 'Oct. 2025',
+    description: 'Completed Time Management professional development module.',
+    image: '/certificates/time.png',
+    category: 'Certification',
+    tag: 'Productivity',
+    url: '/certificates/TIME Management.png',
+  },
+  {
+    title: 'Hands-on Bootcamp on Artificial Intelligence',
+    issuer: 'MachineHack',
+    date: 'Aug. 2025',
+    description: 'Completed intensive hands-on bootcamp on AI concepts and implementations.',
+    image: '/certificates/bootcamp.pdf',
+    category: 'Certification',
+    tag: 'AI',
+    url: '/certificates/certif.png',
+  },
+  {
+    title: 'Introduction to Generative AI Studio',
+    issuer: 'Simplilearn',
+    date: 'Jun. 2025',
+    description: 'Learned the fundamentals of Generative AI tools and prompt engineering.',
+    image: '/certificates/genai.png',
+    category: 'Certification',
+    tag: 'GenAI',
+  },
+  {
+    title: 'AI for Beginners',
+    issuer: 'Simplilearn',
+    date: 'Jun. 2025',
+    description: 'Foundational certification covering the basics of Artificial Intelligence.',
+    image: '/certificates/ai.png',
+    category: 'Certification',
+    tag: 'AI',
+    url: '/certificates/ai fo begniers.png',
+  },
+  {
+    title: 'Tata Group - Global Powered Data Analytics Job Simulation',
+    issuer: 'Forage',
+    date: 'May. 2024',
+    description: 'Simulated job environment completing data analytics tasks for Tata Group.',
+    image: '/certificates/forage.pdf',
+    category: 'Certification',
+    tag: 'Data',
+    url: '/certificates/GenAI Powered Data Analytics Job Simulation.pdf',
+  }
+];
+
+const CATEGORIES: Category[] = [
+  'All',
+  'Milestone',
+  'Publication',
+  'Leadership',
+  'Patent',
+  'Certification',
+];
+
+const CATEGORY_ACCENT = 'bg-black text-white';
+const CATEGORY_BORDER = 'border-black';
+
+const CertificateMedia = ({ src, alt, className, interactive = false }: { src: string; alt: string; className?: string, interactive?: boolean }) => {
+  if (src.endsWith('.pdf')) {
+    return (
+      <object
+        data={src}
+        type="application/pdf"
+        className={className}
+        aria-label={alt}
+        style={{ pointerEvents: interactive ? 'auto' : 'none' }}
+      >
+        <div className="flex items-center justify-center h-full w-full bg-black/5 text-foreground/40 font-mono text-xs p-4 text-center">
+          PDF Document<br/>(Click 'View Credential' to open)
+        </div>
+      </object>
+    );
+  }
+  return <img src={src} alt={alt} className={className} loading="lazy" />;
+};
+
+const AchievementsSection = () => {
+  const [active, setActive] = useState<Category>('All');
+  const [hovered, setHovered] = useState<number | null>(null);
+
+  const filtered =
+    active === 'All'
+      ? achievements
+      : achievements.filter((a) => a.category === active);
+
+  return (
+    <SectionBlock id="achievements" title="Achievements">
+      {/* ── Top bar ──────────────────────────────────────────────── */}
+      <div className="mb-8 pb-6 border-b-2 border-black/10 space-y-4">
+        {/* Stats row */}
+        <div className="flex items-center gap-3">
+          <Award className="w-4 h-4 shrink-0" />
+          <span className="font-mono text-xs sm:text-sm font-bold tracking-widest uppercase">
+            {achievements.length} Certificates
+          </span>
+          <span className="font-mono text-xs text-foreground/40">
+            / {filtered.length} shown
+          </span>
+        </div>
+
+        {/* Filter pills — horizontally scrollable on mobile */}
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActive(cat)}
+              className={`font-mono text-[10px] sm:text-[11px] tracking-widest uppercase px-3 sm:px-4 py-1.5 border-2 transition-all duration-200 whitespace-nowrap shrink-0 ${
+                active === cat
+                  ? 'bg-black text-white border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.25)]'
+                  : 'bg-transparent text-foreground border-black/25 hover:border-black hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Awwwards List ─────────────────────────────────────────── */}
+      <div className="border-t-2 border-black">
+        {filtered.map((item, idx) => (
+          <Dialog key={item.title}>
+            <DialogTrigger asChild>
+              {/* ── Row wrapper */}
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label={`View certificate: ${item.title}`}
+                className="group relative border-b-2 border-black cursor-pointer overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+                onMouseEnter={() => setHovered(idx)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                {/* ── Black fill slides up on hover (desktop only) */}
+                <div
+                  className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-[480ms] ease-[cubic-bezier(0.76,0,0.24,1)] pointer-events-none hidden sm:block"
+                  aria-hidden="true"
+                />
+
+                {/* ── Thumbnail slides in from right on desktop hover */}
+                <div
+                  className="absolute top-0 right-0 h-full w-44 lg:w-56 z-10 overflow-hidden pointer-events-none
+                              translate-x-full group-hover:translate-x-0
+                              transition-transform duration-[480ms] ease-[cubic-bezier(0.76,0,0.24,1)]
+                              hidden sm:block"
+                  aria-hidden="true"
+                >
+                  <CertificateMedia
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover object-top"
+                  />
+                  <div className="absolute inset-0 bg-black/50" />
+                  <div
+                    className={`absolute left-0 top-0 h-full border-l-4 ${CATEGORY_BORDER}`}
+                  />
+                </div>
+
+                {/* ═══════════════════════════════════
+                    MOBILE layout  (< sm)
+                    Small thumbnail always visible + stacked text
+                ════════════════════════════════════ */}
+                <div className="flex sm:hidden items-start gap-3 px-4 py-4 active:bg-black/5 transition-colors">
+                  {/* Thumbnail */}
+                  <div className="w-16 h-16 shrink-0 overflow-hidden border-2 border-black/20">
+                    <CertificateMedia
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </div>
+
+                  {/* Text block */}
+                  <div className="flex-1 min-w-0">
+                    {/* Category + date on same line */}
+                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                      <span
+                        className={`text-[9px] font-mono font-black px-1.5 py-0.5 leading-none ${CATEGORY_ACCENT}`}
+                      >
+                        {item.category.toUpperCase()}
+                      </span>
+                      <span className="font-mono text-[9px] text-foreground/40 tracking-widest uppercase">
+                        {item.date}
+                      </span>
+                    </div>
+                    <h3 className="font-black text-sm leading-snug tracking-tight mb-0.5 line-clamp-2">
+                      {item.title}
+                    </h3>
+                    <p className="font-mono text-[10px] text-foreground/50 line-clamp-1">
+                      {item.issuer}
+                    </p>
+                  </div>
+
+                  {/* Arrow */}
+                  <ArrowUpRight className="w-4 h-4 text-foreground/25 mt-1 shrink-0" />
+                </div>
+
+                {/* ═══════════════════════════════════
+                    TABLET / DESKTOP layout  (≥ sm)
+                    Full awwwards row
+                ════════════════════════════════════ */}
+                <div className="hidden sm:flex items-center gap-4 lg:gap-6 px-6 lg:px-8 py-5 lg:py-6 pr-[12rem] lg:pr-[15rem] relative z-20 transition-colors duration-[480ms]">
+                  {/* Index */}
+                  <span className="font-mono text-xs font-bold text-foreground/25 group-hover:text-white/30 transition-colors duration-300 w-6 shrink-0 select-none">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
+
+                  {/* Category pill */}
+                  <span
+                    className={`text-[10px] font-mono font-black px-2 py-1 shrink-0 leading-none ${CATEGORY_ACCENT}`}
+                  >
+                    {item.category.toUpperCase()}
+                  </span>
+
+                  {/* Title + issuer */}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-black text-base lg:text-lg leading-tight tracking-tight group-hover:text-white transition-colors duration-300 line-clamp-1">
+                      {item.title}
+                    </h3>
+                    <p className="font-mono text-xs text-foreground/50 group-hover:text-white/50 transition-colors duration-300 mt-0.5">
+                      {item.issuer}
+                    </p>
+                  </div>
+
+                  {/* Tag chip — desktop only */}
+                  <span className="hidden lg:inline-block font-mono text-[10px] border border-black/20 group-hover:border-white/30 px-2 py-1 text-foreground/50 group-hover:text-white/50 transition-colors duration-300 shrink-0">
+                    {item.tag}
+                  </span>
+
+                  {/* Date */}
+                  <span className="font-mono text-[10px] tracking-widest uppercase text-foreground/35 group-hover:text-white/40 transition-colors duration-300 shrink-0">
+                    {item.date}
+                  </span>
+
+                  {/* Arrow */}
+                  <ArrowUpRight className="w-5 h-5 text-foreground/25 group-hover:text-white group-hover:rotate-12 transition-all duration-300 shrink-0" />
+                </div>
+              </div>
+            </DialogTrigger>
+
+            {/* ── Lightbox ─────────────────────────────────────────── */}
+            <DialogContent
+              className="
+                w-[95vw] max-w-5xl p-0
+                border-2 sm:border-4 border-black
+                rounded-none
+                shadow-[8px_8px_0px_0px_rgba(0,0,0,0.6)] sm:shadow-[20px_20px_0px_0px_rgba(0,0,0,0.85)]
+                overflow-hidden bg-white
+                max-h-[90vh] overflow-y-auto
+              "
+            >
+              <DialogTitle className="sr-only">{item.title}</DialogTitle>
+              <DialogDescription className="sr-only">
+                {item.issuer} — {item.category}
+              </DialogDescription>
+
+              {/* Stacks vertically on mobile, side-by-side on md+ */}
+              <div className="flex flex-col md:flex-row h-full">
+                {/* Image panel */}
+                <div className="flex-1 bg-black/5 flex items-center justify-center p-3 sm:p-4 min-h-[200px] sm:min-h-[45vh]">
+                  <CertificateMedia
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-auto max-h-[50vh] sm:max-h-[72vh] object-contain"
+                    interactive={true}
+                  />
+                </div>
+
+                {/* Details sidebar */}
+                <div className="md:w-72 p-4 sm:p-6 border-t-2 md:border-t-0 md:border-l-4 border-black flex flex-col justify-between bg-white">
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span
+                        className={`text-[10px] font-mono font-black px-2 py-1 ${CATEGORY_ACCENT}`}
+                      >
+                        {item.category.toUpperCase()}
+                      </span>
+                      <span className="font-mono text-xs text-foreground/30 font-bold">
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+
+                    <h2 className="font-black text-lg sm:text-xl leading-tight mb-2 tracking-tight">
+                      {item.title}
+                    </h2>
+                    <p className="font-mono text-sm text-foreground/70 font-semibold mb-1">
+                      {item.issuer}
+                    </p>
+                    <p className="font-mono text-xs text-foreground/35 tracking-widest uppercase mb-4 sm:mb-6">
+                      {item.date}
+                    </p>
+                    <p className="text-sm text-foreground/65 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 sm:mt-6 pt-4 border-t-2 border-black/10 flex items-center justify-between">
+                    <span className="font-mono text-xs bg-black text-white px-3 py-1.5 inline-block font-bold tracking-wider">
+                      {item.tag}
+                    </span>
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-[10px] text-black font-bold border-2 border-black px-3 py-1.5 uppercase tracking-widest hover:bg-black hover:text-white transition-colors flex items-center gap-1"
+                      >
+                        View Credential <ArrowUpRight className="w-3 h-3" />
+                      </a>
+                    ) : (
+                      <span className="font-mono text-[10px] text-foreground/30 uppercase tracking-widest">
+                        Certificate
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        ))}
+      </div>
+
+      {/* ── Empty state */}
+      {filtered.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-16 sm:py-24 border-b-2 border-black text-foreground/30">
+          <Award className="w-10 h-10 mb-3 opacity-20" />
+          <p className="font-mono text-sm">No certificates in this category</p>
+        </div>
+      )}
+    </SectionBlock>
+  );
+};
+
+export default AchievementsSection;
