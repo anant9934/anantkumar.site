@@ -3,14 +3,32 @@ import { useChat } from '@ai-sdk/react';
 import { Bot, Volume2, X, ChevronRight, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { DefaultChatTransport } from 'ai';
+
 export const AskAnantWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const [input, setInput] = useState('');
 
-  const { messages, input, handleInputChange, handleSubmit, setInput, isLoading } = useChat({
-    api: '/api/ask-anant',
-    initialMessages: [],
+  const { messages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/ask-anant',
+    }),
   });
+
+  const isLoading = status === 'submitted' || status === 'streaming';
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    sendMessage({ text: input });
+    setInput('');
+  };
 
   // Inject pixel font dynamically
   useEffect(() => {
@@ -41,7 +59,7 @@ export const AskAnantWidget = () => {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-8 right-8 z-50 bg-black text-white p-4 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 transition-all duration-200"
       >
-        <MessageSquareTerminal size={32} />
+        <MessageSquare size={32} />
       </button>
 
       {/* Modal Overlay */}
@@ -108,7 +126,12 @@ export const AskAnantWidget = () => {
                             ? 'bg-black text-white' 
                             : 'bg-white text-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]'
                         }`}>
-                          {m.content}
+                          {m.parts && m.parts.map((part, index) => {
+                            if (part.type === 'text') {
+                              return <span key={index}>{part.text}</span>;
+                            }
+                            return null;
+                          })}
                         </div>
                       </div>
                     ))}
