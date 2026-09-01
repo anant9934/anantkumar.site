@@ -478,7 +478,7 @@ const Terminal = () => {
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-6 right-6 z-50 group">
+      <div className="hidden sm:block fixed bottom-6 right-48 sm:right-52 z-40 group">
         <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 bg-black text-white text-[10px] rounded-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
           {isMobile ? 'Terminal' : 'Ctrl + K'}
         </div>
@@ -487,7 +487,7 @@ const Terminal = () => {
             playTerminalOpen();
             setIsOpen(true);
           }}
-          className="p-3 bg-white border border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white transition-all duration-300 active:scale-95 rounded-none"
+          className="p-2.5 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-black hover:text-white transition-all duration-200 active:scale-95 rounded-none flex items-center justify-center"
           aria-label="Open Terminal"
         >
           <TerminalIcon className="w-5 h-5" />

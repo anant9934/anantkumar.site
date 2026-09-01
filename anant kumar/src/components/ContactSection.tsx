@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -18,31 +18,39 @@ import {
   Check,
   Github,
   Linkedin,
-  InstagramIcon,
   BookOpen,
   Send,
   LucideGlobe2,
   AlertTriangle,
   Loader2,
   CheckCircle,
-  Twitter,
+  ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 import { PROFILE, SOCIAL_LINKS } from '@/data/constants';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   github: Github,
   linkedin: Linkedin,
-  instagram: InstagramIcon,
   blog: BookOpen,
-  x: Twitter,
 };
 
 const contactSocials = SOCIAL_LINKS.filter((l) => l.id !== 'email');
+
+// Availability Categories requested by user
+const AVAILABILITY_STATUSES = [
+  { id: 'projects', label: 'Projects', tag: 'AVAILABLE_FOR_PROJECTS', starter: "Hi Anant, I'd like to discuss a project collaboration for..." },
+  { id: 'research', label: 'Research', tag: 'AVAILABLE_FOR_RESEARCH', starter: "Hi Anant, I'm interested in collaborating on research in AI/ML & systems..." },
+  { id: 'freelancing', label: 'Freelancing', tag: 'AVAILABLE_FOR_FREELANCING', starter: "Hi Anant, we have a freelance engineering opportunity for..." },
+  { id: 'partnership', label: 'Partnership', tag: 'AVAILABLE_FOR_PARTNERSHIP', starter: "Hi Anant, I would like to explore a partnership opportunity with..." },
+  { id: 'collaboration', label: 'Collaboration', tag: 'AVAILABLE_FOR_COLLABORATION', starter: "Hi Anant, let's connect and collaborate on..." },
+] as const;
 
 // Zod schema for form validation
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
+  category: z.string().optional(),
   message: z
     .string()
     .min(10, { message: 'Message must be at least 10 characters.' })
@@ -58,21 +66,26 @@ const ContactSection = () => {
   const [honeypot, setHoneypot] = useState('');
   const [rateLimited, setRateLimited] = useState(false);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
+  const [statusIndex, setStatusIndex] = useState(0);
+  const [activeCategory, setActiveCategory] = useState<string>('projects');
+  const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const RATE_LIMIT_MS = 60_000; // 60 seconds between submissions
+  const RATE_LIMIT_MS = 30_000; // 30 seconds between submissions
   const RATE_LIMIT_KEY = 'contact_last_submit';
+
+  // Cycle through availability statuses smoothly
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStatusIndex((prev) => (prev + 1) % AVAILABILITY_STATUSES.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, []);
 
   const formspreeId = (
     (import.meta.env.VITE_FORMSPREE_ID as string) ||
     PROFILE.formspreeId ||
-    ''
+    'mjgzokro'
   ).trim();
-  const cleanId = formspreeId.replace('https://formspree.io/f/', '');
-  const isDemoMode =
-    !cleanId ||
-    cleanId === 'YOUR_FORMSPREE_ID' ||
-    cleanId.toLowerCase() === 'placeholder' ||
-    cleanId.toLowerCase() === 'demo';
 
   const {
     register,
@@ -80,12 +93,14 @@ const ContactSection = () => {
     formState: { errors, isSubmitting },
     reset,
     getValues,
+    setValue,
     watch,
   } = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: '',
       email: '',
+      category: 'Projects',
       message: '',
     },
   });
@@ -94,22 +109,30 @@ const ContactSection = () => {
   const messageLength = messageValue.length;
   const MAX_MESSAGE_LENGTH = 1000;
 
+  // Handle clicking an availability badge
+  const handleBadgeClick = (statusObj: (typeof AVAILABILITY_STATUSES)[number]) => {
+    playPop();
+    setActiveCategory(statusObj.id);
+    setValue('category', statusObj.label);
+    if (!messageValue || AVAILABILITY_STATUSES.some((s) => s.starter === messageValue)) {
+      setValue('message', statusObj.starter);
+    }
+    messageInputRef.current?.focus();
+    toast.info(`Selected: ${statusObj.label} inquiry`, { duration: 1500 });
+  };
+
   const onSubmit = async (data: ContactFormValues) => {
     setSubmitError(null);
 
     // ── Security: Honeypot check ──
-    // If the hidden field is filled, it's a bot — silently abort
     if (honeypot) {
-      await new Promise((r) => setTimeout(r, 1500));
-      setIsSubmitted(true); // fake success so bots think they succeeded
+      await new Promise((r) => setTimeout(r, 1000));
+      setIsSubmitted(true);
       return;
     }
 
     // ── Security: Rate limiting ──
-    const lastSubmit = parseInt(
-      localStorage.getItem(RATE_LIMIT_KEY) || '0',
-      10,
-    );
+    const lastSubmit = parseInt(localStorage.getItem(RATE_LIMIT_KEY) || '0', 10);
     const now = Date.now();
     const elapsed = now - lastSubmit;
     if (elapsed < RATE_LIMIT_MS) {
@@ -133,47 +156,45 @@ const ContactSection = () => {
     localStorage.setItem(RATE_LIMIT_KEY, String(now));
 
     try {
-      if (isDemoMode) {
-        // Simulate network latency in demo mode
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        console.log('Form submitted successfully (Demo Mode):', data);
-      } else {
-        const targetUrl = formspreeId.startsWith('http')
-          ? formspreeId
-          : `https://formspree.io/f/${formspreeId}`;
+      const targetUrl = formspreeId.startsWith('http')
+        ? formspreeId
+        : `https://formspree.io/f/${formspreeId}`;
 
-        const response = await fetch(targetUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
+      const response = await fetch(targetUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          category: data.category || activeCategory,
+          message: data.message,
+          _subject: `[Portfolio Inquiry] ${data.category || 'General'} from ${data.name}`,
+        }),
+      });
 
-        if (!response.ok) {
-          throw new Error(
-            'Could not register submission with Formspree. Try again later.',
-          );
-        }
+      if (!response.ok) {
+        throw new Error('Failed to send via server. You can also email 720anant@gmail.com directly.');
       }
 
       // Success sequence
       playSuccess();
       confetti({
-        particleCount: 100,
-        spread: 70,
+        particleCount: 120,
+        spread: 80,
         origin: { y: 0.6 },
-        colors: ['#000000', '#2563eb', '#16a34a', '#d97706', '#db2777'],
+        colors: ['#000000', '#FACC15', '#10B981', '#3B82F6', '#EF4444'],
       });
       setIsSubmitted(true);
-      toast.success('Your message has been received!');
+      toast.success('Your message has been sent directly to Anant!');
     } catch (err) {
       playError();
       const message =
         err instanceof Error
           ? err.message
-          : 'Something went wrong. Please check your network connection.';
+          : 'Something went wrong. Please check your connection or reach out at 720anant@gmail.com.';
       setSubmitError(message);
       toast.error(message);
     }
@@ -183,63 +204,117 @@ const ContactSection = () => {
     navigator.clipboard.writeText(PROFILE.email);
     playPop();
     setCopied(true);
+    toast.success('Email copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const { ref: registerMessageRef, ...messageRest } = register('message');
+
   return (
     <SectionBlock id="contact" title="Get in touch">
-      <div className="grid md:grid-cols-2 gap-8 md:gap-20">
-        {/* Left Column: Contact Info */}
-        <ScrollReveal animation="fade-in" className="space-y-8 md:space-y-10">
+      <div className="grid md:grid-cols-2 gap-8 md:gap-16">
+        {/* Left Column: Contact Info & Status */}
+        <ScrollReveal animation="fade-in" className="space-y-6 md:space-y-8">
           <p className="text-foreground/80 leading-relaxed font-light text-lg">
-            I'm always interested in hearing about new projects and
-            opportunities. Whether you have a question or just want to say hi,
-            feel free to drop a message.
+            I'm actively available for <strong>high-impact projects, AI/ML research, freelance engineering, partnerships, and collaborations</strong>.
+            Whether you want to build something ambitious or just connect, drop a message below.
           </p>
 
-          <div className="space-y-6">
-            <div className="group flex items-center gap-4 p-4 border border-foreground/10 bg-white/50 hover:border-black transition-colors duration-300 rounded-none">
-              <div className="p-3 bg-black text-white self-start rounded-none">
-                <Mail className="w-5 h-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs uppercase tracking-widest text-foreground/50 mb-1">
-                  Email
-                </p>
-                <p className="font-mono text-sm break-all">{PROFILE.email}</p>
+          <div className="space-y-4">
+            {/* Email Card */}
+            <div className="group flex items-center justify-between gap-4 p-4 border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-200 rounded-none">
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="p-2.5 bg-black text-white rounded-none shrink-0">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] uppercase font-mono tracking-widest text-foreground/50 mb-0.5">
+                    Direct Email
+                  </p>
+                  <a
+                    href={`mailto:${PROFILE.email}`}
+                    className="font-mono text-sm font-bold hover:underline break-all text-black"
+                  >
+                    {PROFILE.email}
+                  </a>
+                </div>
               </div>
               <button
                 onClick={copyEmail}
-                className="p-2 hover:bg-black/5 rounded-none transition-colors relative"
-                title="Copy email"
+                className="p-2.5 border-2 border-black bg-zinc-100 hover:bg-black hover:text-white rounded-none transition-colors shrink-0"
+                title="Copy email address"
                 aria-label={copied ? 'Email copied' : 'Copy email address'}
               >
-                {copied ? (
-                  <Check className="w-4 h-4 text-black" />
-                ) : (
-                  <Copy className="w-4 h-4 text-foreground/40" />
-                )}
+                {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
 
-            <div className="flex items-center gap-4 p-4 border border-foreground/10 bg-white/50 hover:border-black transition-colors duration-300 rounded-none">
-              <div className="p-3 bg-black text-white self-start rounded-none">
-                <LucideGlobe2 className="w-5 h-5" />
+            {/* Current Status — Dynamic Interactive Availability Card */}
+            <div className="p-4 border-2 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] space-y-3 rounded-none">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-black text-white rounded-none">
+                    <LucideGlobe2 className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-mono tracking-widest text-foreground/50">
+                      CURRENT STATUS
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
+                      <span className="font-mono text-xs font-black text-emerald-700 tracking-wider">
+                        OPEN FOR WORK
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Animated Status Cycling Tag */}
+                <div className="hidden sm:block">
+                  <span className="font-mono text-[11px] font-black px-2.5 py-1 bg-black text-yellow-400 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                    {AVAILABILITY_STATUSES[statusIndex].tag}
+                  </span>
+                </div>
               </div>
-              <div>
-                <p className="text-xs uppercase tracking-widest text-foreground/50 mb-1">
-                  Current Status
+
+              {/* Clickable Multi-Availability Tags */}
+              <div className="pt-2 border-t border-black/10">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-foreground/60 mb-2 flex items-center gap-1">
+                  <Sparkles size={11} className="text-yellow-600" /> Click to auto-select inquiry type:
                 </p>
-                <p className="font-mono text-sm">AVAILABLE_FOR_PROJECTS</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {AVAILABILITY_STATUSES.map((status) => {
+                    const isSelected = activeCategory === status.id;
+                    return (
+                      <button
+                        key={status.id}
+                        type="button"
+                        onClick={() => handleBadgeClick(status)}
+                        className={`font-mono text-[11px] font-bold px-2.5 py-1 border-2 transition-all duration-150 flex items-center gap-1 ${
+                          isSelected
+                            ? 'bg-black text-white border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] scale-[1.02]'
+                            : 'bg-zinc-50 text-black border-black/30 hover:border-black hover:bg-black hover:text-white'
+                        }`}
+                      >
+                        <span className="text-[10px]">{isSelected ? '✓' : '+'}</span>
+                        <span>{status.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
 
+          {/* Social Links */}
           <div>
-            <p className="text-xs uppercase tracking-widest text-foreground/50 mb-4">
-              Connect
+            <p className="text-xs uppercase font-mono tracking-widest text-foreground/50 mb-3">
+              Social Profiles & Channels
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-3">
               {contactSocials.map((link) => {
                 const Icon = ICON_MAP[link.id];
                 if (!Icon) return null;
@@ -251,9 +326,10 @@ const ContactSection = () => {
                     rel="noopener noreferrer"
                     onClick={playClick}
                     aria-label={link.label}
-                    className="p-3 border border-foreground/20 hover:bg-black hover:text-white transition-all duration-300 hover:-translate-y-1 active:scale-95 touch-manipulation rounded-none"
+                    className="flex items-center gap-2 px-4 py-2.5 border-2 border-black bg-white font-mono text-xs font-bold text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-black hover:text-white transition-all duration-150 rounded-none"
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-4 h-4" />
+                    <span>{link.label}</span>
                   </a>
                 );
               })}
@@ -261,61 +337,49 @@ const ContactSection = () => {
           </div>
         </ScrollReveal>
 
-        {/* Right Column: Form or Success State */}
+        {/* Right Column: Interactive Form or Success State */}
         <ScrollReveal animation="fade-up" delay={0.2} className="w-full">
           {isSubmitted ? (
-            <div className="flex flex-col items-center justify-center p-8 border-2 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center space-y-6 animate-fade-in min-h-[400px] rounded-none">
-              <div className="p-4 bg-black border-2 border-black rounded-none text-white animate-pulse">
+            <div className="flex flex-col items-center justify-center p-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center space-y-6 animate-fade-in min-h-[440px] rounded-none">
+              <div className="p-4 bg-black border-2 border-black rounded-none text-yellow-400">
                 <CheckCircle className="w-12 h-12" />
               </div>
               <h3 className="font-mono text-2xl font-black uppercase tracking-wider text-black">
-                Message Received!
+                Message Sent Successfully!
               </h3>
-              <p className="text-sm font-light text-foreground/80 leading-relaxed max-w-sm">
-                Thank you for reaching out, <strong>{getValues('name')}</strong>
-                . Your message has been successfully routed. I'll get back to
-                you as soon as possible.
+              <p className="text-sm font-mono text-foreground/80 leading-relaxed max-w-sm">
+                Thank you for reaching out, <strong>{getValues('name')}</strong>! Your message regarding{' '}
+                <strong>{getValues('category') || 'your inquiry'}</strong> has been delivered to Anant's inbox.
               </p>
 
-              {isDemoMode && (
-                <div className="p-4 bg-amber-50 border border-amber-500 font-mono text-[10px] text-amber-800 text-left space-y-1 max-w-sm rounded-none">
-                  <p className="font-bold uppercase tracking-wider text-amber-900 flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5" /> Developer Notice:
-                  </p>
-                  <p>
-                    This form is in demo mode because a custom Formspree ID is
-                    not configured.
-                  </p>
-                  <p className="underline">
-                    Please set `VITE_FORMSPREE_ID` in your `.env` file (which is
-                    ignored by Git) to receive real submissions.
-                  </p>
-                </div>
-              )}
-
-              <button
-                onClick={() => {
-                  playClick();
-                  setIsSubmitted(false);
-                  reset();
-                }}
-                className="px-6 py-3 border-2 border-black bg-black text-white font-mono uppercase text-xs tracking-widest font-bold hover:bg-white hover:text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 active:scale-95 rounded-none"
-              >
-                Send Another Message
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <button
+                  onClick={() => {
+                    playClick();
+                    setIsSubmitted(false);
+                    reset();
+                  }}
+                  className="px-6 py-3 border-2 border-black bg-black text-white font-mono uppercase text-xs tracking-widest font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-white hover:text-black transition-all duration-150 rounded-none"
+                >
+                  Send Another Message
+                </button>
+                <a
+                  href={`mailto:${PROFILE.email}`}
+                  className="px-6 py-3 border-2 border-black bg-white text-black font-mono uppercase text-xs tracking-widest font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-black hover:text-white transition-all duration-150 rounded-none flex items-center justify-center gap-1.5"
+                >
+                  <span>Open in Mail</span>
+                  <ExternalLink size={13} />
+                </a>
+              </div>
             </div>
           ) : (
             <form
               onSubmit={handleSubmit(onSubmit, () => playError())}
-              className="space-y-6"
+              className="p-6 md:p-8 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] space-y-5 rounded-none font-mono"
               noValidate
             >
-              {/* ── Security: Honeypot field — hidden from real users, bots fill it ── */}
-              <div
-                aria-hidden="true"
-                className="absolute -z-50 opacity-0 h-0 overflow-hidden"
-                tabIndex={-1}
-              >
+              {/* Honeypot field for bot spam protection */}
+              <div aria-hidden="true" className="absolute -z-50 opacity-0 h-0 overflow-hidden" tabIndex={-1}>
                 <input
                   type="text"
                   name="_gotcha"
@@ -325,154 +389,117 @@ const ContactSection = () => {
                   tabIndex={-1}
                 />
               </div>
+
               {submitError && (
-                <div className="flex items-start gap-3 p-4 bg-red-50 border-2 border-red-500 text-red-700 font-mono text-xs rounded-none">
+                <div className="flex items-start gap-3 p-3.5 bg-red-50 border-2 border-red-500 text-red-700 text-xs rounded-none">
                   <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-bold uppercase">Submission Failed</p>
+                    <p className="font-bold uppercase">Submission Notice</p>
                     <p>{submitError}</p>
                   </div>
                 </div>
               )}
 
               {/* Name Input */}
-              <div className="group relative">
+              <div>
+                <label htmlFor="contact-name" className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
+                  Your Name *
+                </label>
                 <input
                   id="contact-name"
                   type="text"
-                  placeholder=" "
+                  placeholder="e.g. Alex Rivera"
                   {...register('name')}
-                  className={`peer w-full bg-transparent border-2 ${
-                    errors.name
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-foreground/10 focus:border-black'
-                  } px-4 py-4 text-foreground focus:outline-none transition-colors rounded-none`}
+                  className={`w-full bg-white border-2 ${
+                    errors.name ? 'border-red-500 focus:border-red-500' : 'border-black focus:border-black'
+                  } px-3.5 py-3 text-sm text-black placeholder:text-zinc-400 focus:outline-none shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)] focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all rounded-none`}
                 />
-                <label
-                  htmlFor="contact-name"
-                  className={`absolute left-4 top-4 text-sm uppercase tracking-widest transition-all duration-300 pointer-events-none peer-focus:-translate-y-7 peer-focus:text-xs peer-focus:bg-background peer-focus:px-2 peer-[:not(:placeholder-shown)]:-translate-y-7 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:px-2 ${
-                    errors.name
-                      ? 'text-red-500 peer-focus:text-red-500'
-                      : 'text-foreground/40 peer-focus:text-black'
-                  }`}
-                >
-                  Your Name
-                </label>
                 {errors.name && (
-                  <p className="mt-1.5 font-mono text-xs text-red-500 font-bold flex items-center gap-1 animate-shake">
-                    <AlertTriangle className="w-3.5 h-3.5" />
+                  <p className="mt-1 font-mono text-[11px] text-red-600 font-bold flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
                     {errors.name.message}
                   </p>
                 )}
               </div>
 
               {/* Email Input */}
-              <div className="group relative">
+              <div>
+                <label htmlFor="contact-email" className="block text-[11px] font-black uppercase tracking-wider text-black mb-1.5">
+                  Email Address *
+                </label>
                 <input
                   id="contact-email"
                   type="email"
-                  placeholder=" "
+                  placeholder="name@company.com"
                   {...register('email')}
-                  className={`peer w-full bg-transparent border-2 ${
-                    errors.email
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-foreground/10 focus:border-black'
-                  } px-4 py-4 text-foreground focus:outline-none transition-colors rounded-none`}
+                  className={`w-full bg-white border-2 ${
+                    errors.email ? 'border-red-500 focus:border-red-500' : 'border-black focus:border-black'
+                  } px-3.5 py-3 text-sm text-black placeholder:text-zinc-400 focus:outline-none shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)] focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all rounded-none`}
                 />
-                <label
-                  htmlFor="contact-email"
-                  className={`absolute left-4 top-4 text-sm uppercase tracking-widest transition-all duration-300 pointer-events-none peer-focus:-translate-y-7 peer-focus:text-xs peer-focus:bg-background peer-focus:px-2 peer-[:not(:placeholder-shown)]:-translate-y-7 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:px-2 ${
-                    errors.email
-                      ? 'text-red-500 peer-focus:text-red-500'
-                      : 'text-foreground/40 peer-focus:text-black'
-                  }`}
-                >
-                  Email Address
-                </label>
                 {errors.email && (
-                  <p className="mt-1.5 font-mono text-xs text-red-500 font-bold flex items-center gap-1 animate-shake">
-                    <AlertTriangle className="w-3.5 h-3.5" />
+                  <p className="mt-1 font-mono text-[11px] text-red-600 font-bold flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
                     {errors.email.message}
                   </p>
                 )}
               </div>
 
               {/* Message Input */}
-              <div className="group relative">
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <label htmlFor="contact-message" className="text-[11px] font-black uppercase tracking-wider text-black">
+                    Your Message *
+                  </label>
+                  <span className={`text-[10px] ${messageLength >= MAX_MESSAGE_LENGTH ? 'text-red-600 font-bold' : 'text-zinc-500'}`}>
+                    {messageLength} / {MAX_MESSAGE_LENGTH}
+                  </span>
+                </div>
                 <textarea
                   id="contact-message"
-                  rows={5}
-                  placeholder=" "
+                  rows={4}
+                  placeholder="Tell me about your project, idea, research topic, or inquiry..."
                   maxLength={MAX_MESSAGE_LENGTH}
-                  {...register('message')}
-                  className={`peer w-full bg-transparent border-2 ${
-                    errors.message
-                      ? 'border-red-500 focus:border-red-500'
-                      : 'border-foreground/10 focus:border-black'
-                  } px-4 py-4 text-foreground focus:outline-none transition-colors resize-none rounded-none`}
+                  {...messageRest}
+                  ref={(e) => {
+                    registerMessageRef(e);
+                    messageInputRef.current = e;
+                  }}
+                  className={`w-full bg-white border-2 ${
+                    errors.message ? 'border-red-500 focus:border-red-500' : 'border-black focus:border-black'
+                  } px-3.5 py-3 text-sm text-black placeholder:text-zinc-400 focus:outline-none shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)] focus:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all resize-none rounded-none`}
                 />
-                <label
-                  htmlFor="contact-message"
-                  className={`absolute left-4 top-4 text-sm uppercase tracking-widest transition-all duration-300 pointer-events-none peer-focus:-translate-y-7 peer-focus:text-xs peer-focus:bg-background peer-focus:px-2 peer-[:not(:placeholder-shown)]:-translate-y-7 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-background peer-[:not(:placeholder-shown)]:px-2 ${
-                    errors.message
-                      ? 'text-red-500 peer-focus:text-red-500'
-                      : 'text-foreground/40 peer-focus:text-black'
-                  }`}
-                >
-                  Message
-                </label>
-                <div className="flex justify-between items-center mt-1.5 min-h-[20px]">
-                  <div className="flex-1">
-                    {errors.message && (
-                      <p className="font-mono text-xs text-red-500 font-bold flex items-center gap-1 animate-shake">
-                        <AlertTriangle className="w-3.5 h-3.5" />
-                        {errors.message.message}
-                      </p>
-                    )}
-                  </div>
-                  <div
-                    className={`font-mono text-xs ${
-                      messageLength >= MAX_MESSAGE_LENGTH
-                        ? 'text-red-500 font-bold'
-                        : 'text-foreground/40'
-                    }`}
-                  >
-                    {messageLength} / {MAX_MESSAGE_LENGTH}
-                  </div>
-                </div>
+                {errors.message && (
+                  <p className="mt-1 font-mono text-[11px] text-red-600 font-bold flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
+                    {errors.message.message}
+                  </p>
+                )}
               </div>
 
+              {/* Submit button */}
               <div>
-                {/* Submit button */}
                 <button
                   type="submit"
                   disabled={isSubmitting || rateLimited}
                   onClick={playClick}
-                  className="w-full group relative flex items-center justify-center gap-3 px-8 py-4 bg-black text-white font-mono uppercase tracking-widest overflow-hidden transition-all duration-300 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.5)] hover:-translate-y-1 active:scale-95 active:shadow-none disabled:opacity-75 disabled:cursor-not-allowed disabled:transform-none rounded-none"
+                  className="w-full flex items-center justify-center gap-2.5 px-6 py-4 bg-black text-white font-mono uppercase tracking-widest text-xs font-black border-2 border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] hover:bg-zinc-900 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed rounded-none"
                 >
                   {isSubmitting ? (
                     <>
-                      <span className="relative z-10 font-bold group-hover:text-black transition-colors duration-300">
-                        Sending...
-                      </span>
-                      <Loader2 className="w-4 h-4 relative z-10 animate-spin group-hover:text-black transition-colors duration-300" />
+                      <span>Sending Message...</span>
+                      <Loader2 className="w-4 h-4 animate-spin" />
                     </>
                   ) : rateLimited ? (
                     <>
-                      <span className="relative z-10 font-bold group-hover:text-black transition-colors duration-300">
-                        Wait {cooldownSeconds}s
-                      </span>
-                      <Loader2 className="w-4 h-4 relative z-10 animate-spin group-hover:text-black transition-colors duration-300" />
+                      <span>Please wait {cooldownSeconds}s</span>
+                      <Loader2 className="w-4 h-4 animate-spin" />
                     </>
                   ) : (
                     <>
-                      <span className="relative z-10 font-bold group-hover:text-black transition-colors duration-300">
-                        Send Message
-                      </span>
-                      <Send className="w-4 h-4 relative z-10 group-hover:translate-x-1 group-hover:text-black transition-all duration-300" />
+                      <span>SEND MESSAGE</span>
+                      <Send className="w-4 h-4" />
                     </>
                   )}
-                  <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 </button>
               </div>
             </form>
