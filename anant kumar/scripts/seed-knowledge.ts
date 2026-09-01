@@ -4,6 +4,8 @@ import { db } from '../db/index.js';
 import { claims } from '../db/schema.js';
 import { PROFILE, SOCIAL_LINKS } from '../src/data/constants.js';
 import { PROJECTS } from '../src/data/projects.js';
+import { ACHIEVEMENTS } from '../src/data/achievements.js';
+import { EXPERIENCES } from '../src/data/experience.js';
 import { eq } from 'drizzle-orm';
 
 async function seed() {
@@ -69,6 +71,28 @@ async function seed() {
         visibility: 'PUBLIC' as const,
       });
     }
+  }
+
+  // Add achievements (certifications, publications, etc)
+  for (const ach of ACHIEVEMENTS) {
+    verifiedClaims.push({
+      subject: PROFILE.name,
+      predicate: `has a ${ach.category} in`,
+      objectValue: `${ach.title} from ${ach.issuer} (${ach.date})`,
+      status: 'VERIFIED' as const,
+      visibility: 'PUBLIC' as const,
+    });
+  }
+
+  // Add experiences
+  for (const exp of EXPERIENCES) {
+    verifiedClaims.push({
+      subject: PROFILE.name,
+      predicate: `worked as ${exp.role} at`,
+      objectValue: `${exp.company} ${exp.period}. ${exp.description}`,
+      status: 'VERIFIED' as const,
+      visibility: 'PUBLIC' as const,
+    });
   }
 
   // Clear existing claims to avoid duplicates during seeding
