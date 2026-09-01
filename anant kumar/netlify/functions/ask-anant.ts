@@ -60,7 +60,7 @@ export default async function handler(req: Request) {
         model: primaryModel,
         messages: [{ role: 'user', content: 'Say: "I can only answer questions about Anant Kumar."' }],
       });
-      return result.toDataStreamResponse();
+      return result.toUIMessageStreamResponse();
     }
 
     // Retrieve relevant knowledge
@@ -92,7 +92,7 @@ ${context}`,
       messages: modelMessages,
     });
 
-    return result.toDataStreamResponse();
+    return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error('Ask Anant API Error:', error);
     return new Response(

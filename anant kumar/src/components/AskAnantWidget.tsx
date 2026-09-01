@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { X, ChevronRight, Sparkles } from 'lucide-react';
+import { X, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DefaultChatTransport } from 'ai';
 
@@ -57,17 +57,12 @@ export const AskAnantWidget = () => {
                        hover:translate-x-[3px] hover:translate-y-[3px] transition-all duration-150 select-none group"
           >
             {/* Avatar circle */}
-            <div className="w-9 h-9 rounded-full bg-white border-[2px] border-white overflow-hidden shrink-0 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-black border-[2px] border-yellow-400 overflow-hidden shrink-0 flex items-center justify-center shadow-[0_0_10px_rgba(250,204,21,0.5)]">
               <img
-                src="/favicon.png"
-                alt="Anant"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
-                }}
+                src="/ai-avatar.png"
+                alt="Anant AI"
+                className="w-full h-full object-cover object-top scale-110"
               />
-              <Sparkles size={18} className="hidden text-black" />
             </div>
             {/* Label */}
             <div className="flex flex-col leading-tight text-left">
@@ -115,14 +110,11 @@ export const AskAnantWidget = () => {
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 border-b-[3px] border-black bg-black text-white shrink-0">
                 <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white border-[2px] border-white/30 overflow-hidden flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-black border-[2px] border-yellow-400 overflow-hidden flex items-center justify-center shrink-0">
                     <img
-                      src="/favicon.png"
-                      alt="Anant"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
+                      src="/ai-avatar.png"
+                      alt="Anant AI"
+                      className="w-full h-full object-cover object-top scale-110"
                     />
                   </div>
                   <div className="flex flex-col leading-tight">
@@ -183,7 +175,10 @@ export const AskAnantWidget = () => {
                   <div className="flex flex-col gap-3">
                     {messages.map((m) => {
                       const text = m.parts
-                        ? m.parts.filter((p: {type: string}) => p.type === 'text').map((p: {text: string}) => p.text).join('')
+                        ? (m.parts as Array<{type: string; text?: string}>)
+                            .filter(p => p.type === 'text')
+                            .map(p => p.text ?? '')
+                            .join('')
                         : (m as {content?: string}).content || '';
                       return (
                         <div key={m.id} className={`flex flex-col gap-1 ${m.role === 'user' ? 'items-end' : 'items-start'}`}>
