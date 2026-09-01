@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { Bot, Volume2, X, ChevronRight, MessageSquareTerminal } from 'lucide-react';
+import { Bot, Volume2, X, ChevronRight, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const AskAnantWidget = () => {
