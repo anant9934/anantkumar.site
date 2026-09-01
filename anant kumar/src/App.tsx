@@ -1,14 +1,18 @@
+import React, { Suspense, useEffect, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ReactLenis, useLenis } from 'lenis/react';
-import { useEffect } from 'react';
 import { ScrollTrigger } from '@/lib/gsap';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
-import { AskAnantWidget } from './components/AskAnantWidget';
+
+// Lazy-load AskAnantWidget to prevent AI SDK and chat dependencies from blocking critical path
+const AskAnantWidget = lazy(() =>
+  import('./components/AskAnantWidget').then((m) => ({ default: m.AskAnantWidget })),
+);
 
 const queryClient = new QueryClient();
 
@@ -55,7 +59,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <AskAnantWidget />
+          <Suspense fallback={null}>
+            <AskAnantWidget />
+          </Suspense>
           <Routes>
             <Route path="/" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

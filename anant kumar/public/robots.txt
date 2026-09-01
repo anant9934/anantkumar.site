@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vara-s-portfolio.vercel.app/sitemap.xml
+Sitemap: https://anantkumar.site/sitemap.xml

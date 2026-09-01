@@ -17,4 +17,17 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-framer': ['framer-motion'],
+          'vendor-gsap': ['gsap'],
+          'vendor-ai': ['@ai-sdk/react', 'ai'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 800,
+  },
 }));
