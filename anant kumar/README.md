@@ -1,4 +1,4 @@
-# 🚀 Durga Vara Prasad's Professional Engineering Portfolio
+# 🚀 Anant Kumar's Professional Engineering Portfolio
 
 **A High-Performance, Neo-Brutalist Digital Identity & Engineering Showcase**
 
@@ -9,7 +9,7 @@
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![ShadcnUI](https://img.shields.io/badge/Shadcn_UI-000000?style=for-the-badge&logo=shadcnui&logoColor=white)](https://ui.shadcn.com/)
 
-[**Live Demo**](https://vara-s-portfolio.vercel.app/) • [**Source Code**](https://github.com/VARA4u-tech/Vara-s--Portfolio) • [**Request Collaboration**](mailto:durgavaraprasadpappuri13@gmail.com)
+[**Live Demo**](https://anantkumar.site) • [**Source Code**](https://github.com/anant9934/anantkumar.site) • [**Request Collaboration**](mailto:720anant@gmail.com)
 
 ---
 
@@ -243,6 +243,6 @@ src/
 
 <div align="center">
   <h3><b>Let's Build Something Exceptional Together.</b></h3>
-  <p>durgavaraprasadpappuri13@gmail.com</p>
-  <p>© 2026 Durga Vara Prasad. Built with 🤍 and Coffee.</p>
+  <p>720anant@gmail.com</p>
+  <p>© 2026 Anant Kumar. Built with 🤍 and Coffee.</p>
 </div>
